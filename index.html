@@ -11,7 +11,14 @@
 
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
-    <circle cx="500" cy="500" r="50" />
+    <defs>
+      <circle id="circle" cx="500" cy="500" r="50" />
+    </defs>
+    <use x="0" y="0" xlink:href="#circle" />
+    <use x="-20" y="40" xlink:href="#circle" />
+    <use x="-100" y="-200" xlink:href="#circle" />
+    <use x="0" y="0" xlink:href="#circle" />
+    <use x="0" y="0" xlink:href="#circle" />
   </svg>
   <script src="js/site.js"></script>
 </body>
