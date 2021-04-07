@@ -1,13 +1,13 @@
 // fetch weather data
 
-  let lat;
-  let long;
+var lat = 42.3429718;
+var long = -71.0557969;
 
-  const api = `http://api.weatherapi.com/v1/forecast.json?key=5863755acb594078956213139202910&q=${lat},${long}&days=1`;
+const api = `http://api.weatherapi.com/v1/forecast.json?key=5863755acb594078956213139202910&q=${lat},${long}&days=1`;
 
-  fetch(api)
-    .then((response) => response.json())
-    .then((data) => console.log(data));
+fetch(api)
+  .then((response) => response.json())
+  .then((data) => console.log(data));
        
 
 // draw circle
