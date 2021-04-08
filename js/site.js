@@ -1,9 +1,14 @@
 // fetch weather data
 
+const body = document.body;
+const circle = document.querySelector('circle');
+
 var lat = 42.3429718;
 var long = -71.0557969;
 var temp = 65;
 var temp_color = 180;
+var wind = 5;
+var wind_speed = 5;
 
 const api = `http://api.weatherapi.com/v1/forecast.json?key=5863755acb594078956213139202910&q=${lat},${long}&days=1`;
 
@@ -20,38 +25,21 @@ fetch(api)
       temp_c,
     } = data.current;
 
-    const { name } = data.location;
-
-    const { text, icon } = data.current.condition;
-
-    const {
-      maxtemp_f,
-      mintemp_f,
-      maxtemp_c,
-      mintemp_c,
-    } = data.forecast.forecastday[0].day;
-
-    const hour_0_temp_f = data.forecast.forecastday[0].hour[0].temp_f;
-
-    const hour_1_temp_f = data.forecast.forecastday[0].hour[1].temp_f;
-
     temp = data.current.temp_f;
     console.log("Temp: ", temp);
-
+    wind = data.current.wind_mph;
+    console.log("Wind: ", wind);
+    wind_speed = 10 - 5 * (wind / 12.3);
+    console.log("wind_speed: ", wind_speed);
     temp_color = remapNumber(temp, 9, 91, 180, 360);
     console.log("temp_color: ", temp_color);
+
+    body.style.setProperty('--circle-animation-speed', `${wind_speed}s`);
+
     draw();
   });
 
-
-
 // draw circle
-const body = document.body;
-const circle = document.querySelector('circle');
-body.style.setProperty('--circle-animation-speed', '5s');
-
-
-
 function draw() {
   const color = `hsl(${temp_color}, 100%, 50%)`;
   body.style.setProperty('--circle-fill', color);
@@ -61,6 +49,7 @@ function draw() {
   });
 }
 
+// Remap a number within two given ranges
 function remapNumber(number, in_min, in_max, out_min, out_max) {
   return (number - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
