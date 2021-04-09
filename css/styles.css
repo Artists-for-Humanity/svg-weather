@@ -1,6 +1,6 @@
 :root {
   --circle-fill: rgb(0, 0, 255);
-  --circle-animation-speed: 1s;
+  /* --circle-animation-speed: 1s; */
 }
 
 @keyframes pingPong {
@@ -15,6 +15,6 @@
 }
 
 circle {
-  animation: pingPong var(--circle-animation-speed) infinite;
+  /* animation: pingPong var(--circle-animation-speed) infinite; */
   fill: var(--circle-fill);
 }
