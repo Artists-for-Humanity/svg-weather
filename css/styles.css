@@ -3,7 +3,7 @@
   /* --circle-animation-speed: 1s; */
 }
 
-@keyframes pingPong {
+/* @keyframes pingPong {
   0%,
   100% {
     transform: translate3d(-5%, 0, 0);
@@ -12,7 +12,7 @@
   50% {
     transform: translate3d(5%, 0, 0);
   }
-}
+} */
 
 circle {
   /* animation: pingPong var(--circle-animation-speed) infinite; */

@@ -34,9 +34,7 @@ fetch(api)
     temp_color = remapNumber(temp, 9, 91, 180, 360);
     console.log("temp_color: ", temp_color);
 
-    // body.style.setProperty('--circle-animation-speed', `${wind_speed}s`);
     createSVG();
-    draw();
   });
 
 // draw circle
@@ -45,23 +43,25 @@ function draw() {
   const color = `hsl(${temp_color}, 100%, 50%)`;
   body.style.setProperty('--circle-fill', color);
 
-  // window.requestAnimationFrame(() => {
-  //   draw();
-  // });
+  window.requestAnimationFrame(() => {
+    draw();
+  });
 }
 
 function createSVG() {
   console.log("createSVG() called successfully");
 
-  const canvas = document.getElementById("canvas");
-  const svg = document.createElement("svg");
+  const canvas = document.getElementById('canvas');
+  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  
   // Set viewport here
   svg.setAttribute("viewBox", "0 0 1000 1000");
+  svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  
   canvas.appendChild(svg);
 
   let position ={rad:50, xpos:500, ypos:500};
   
-  svg.appendChild(createCircle(position));
   position = generatePositionValues(position);
   svg.appendChild(createCircle(position));
 
@@ -71,6 +71,8 @@ function createSVG() {
   position = generatePositionValues(position);
   svg.appendChild(createCircle(position));
 
+  position = generatePositionValues(position);
+  svg.appendChild(createCircle(position));
 }
 
 function generatePositionValues(pre_pos) {
@@ -88,7 +90,7 @@ function generatePositionValues(pre_pos) {
 
 function createCircle({rad, xpos, ypos}) {
   console.log("createCircle() called successfully");
-  const circle = document.createElement("circle");
+  const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
   // Set circle attributes
   circle.setAttribute("cx", xpos);
   circle.setAttribute("cy", ypos);
