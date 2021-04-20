@@ -1,5 +1,5 @@
 :root {
-  --circle-fill: rgb(0, 0, 255);
+  /* --circle-fill: rgb(0, 0, 255); */
   /* --circle-animation-speed: 1s; */
 }
 
@@ -16,6 +16,5 @@
 
 circle {
   position: absolute;
-  /* animation: pingPong var(--circle-animation-speed) infinite; */
-  fill: var(--circle-fill);
+  animation: pingPong var(--circle-animation-speed) infinite;
 }

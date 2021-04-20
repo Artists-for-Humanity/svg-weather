@@ -7,6 +7,7 @@ let lat = 42.3429718;
 let long = -71.0557969;
 let temp = 65;
 let temp_color = 180;
+let precip = 100;
 let wind = 5;
 let wind_speed = 5;
 let cloud_count = 0;
@@ -18,6 +19,7 @@ fetch(api)
   .then((data) => {
     console.log(data);
     const {
+      precip_mm,
       temp_f,
       feelslike_f,
       humidity,
@@ -25,7 +27,8 @@ fetch(api)
       wind_mph,
       temp_c,
     } = data.current;
-
+    precip = data.current.precip_mm;
+    console.log("Precip: ", precip);
     temp = data.current.temp_f;
     console.log("Temp: ", temp);
     wind = data.current.wind_mph;
@@ -35,13 +38,14 @@ fetch(api)
     temp_color = remapNumber(temp, 9, 91, 180, 360);
     console.log("temp_color: ", temp_color);
 
-    cloudSVG(10, temp_color);
+
+    cloudSVG(10, precip);
   });
 
 // draw circle
 function draw() {
   console.log("draw() called successfully");
-  const color = `hsl(${temp_color}, 100%, 50%)`;
+  const color = `hsl(0%, 100%, 50%)`;
   body.style.setProperty('--circle-fill', color);
 
   window.requestAnimationFrame(() => {
@@ -63,7 +67,7 @@ function generatePositionValues(pre_pos) {
 }
 
 // Creates an svg containing n circles
-function cloudSVG(n, cloud_color) {
+function cloudSVG(n, precip) {
 
   const canvas = document.getElementById('canvas');
   const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -82,15 +86,23 @@ function cloudSVG(n, cloud_color) {
 
   for (i = 0; i < n; i++){
     position = generatePositionValues(position);
-    document.getElementById(cloud_id).innerHTML += createCircle(position);
+    console.log("Cloud Color: ", cloudColor(precip));
+    document.getElementById(cloud_id).innerHTML += createCircle(position, cloudColor(precip));
   }
+
   return svg;
 }
 
 // Returns a circle with given position and radius data
-function createCircle({rad, xpos, ypos}) {
+function createCircle({rad, xpos, ypos}, p) {
   console.log("createCircle() called successfully");
-  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px"></circle>`;
+  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${p}"></circle>`;
+}
+
+function cloudColor(n) {
+  let c = remapNumber(n, 0, 200, 25, 85);
+  let col_val = 110 - c;
+  return `hsl(0%, 0%, ${col_val}%)`;
 }
 
 // Remap a number within two given ranges
