@@ -9,6 +9,7 @@ let temp = 65;
 let temp_color = 180;
 let wind = 5;
 let wind_speed = 5;
+let cloud_count = 0;
 
 const api = `http://api.weatherapi.com/v1/forecast.json?key=5863755acb594078956213139202910&q=${lat},${long}&days=1`;
 
@@ -34,7 +35,7 @@ fetch(api)
     temp_color = remapNumber(temp, 9, 91, 180, 360);
     console.log("temp_color: ", temp_color);
 
-    createSVG();
+    cloudSVG(10, temp_color);
   });
 
 // draw circle
@@ -48,33 +49,6 @@ function draw() {
   });
 }
 
-function createSVG() {
-  console.log("createSVG() called successfully");
-
-  const canvas = document.getElementById('canvas');
-  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  
-  // Set viewport here
-  svg.setAttribute("viewBox", "0 0 1000 1000");
-  svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  
-  canvas.appendChild(svg);
-
-  let position ={rad:50, xpos:500, ypos:500};
-  
-  position = generatePositionValues(position);
-  svg.appendChild(createCircle(position));
-
-  position = generatePositionValues(position);
-  svg.appendChild(createCircle(position));
-
-  position = generatePositionValues(position);
-  svg.appendChild(createCircle(position));
-
-  position = generatePositionValues(position);
-  svg.appendChild(createCircle(position));
-}
-
 function generatePositionValues(pre_pos) {
   console.log("generatePositionValues() called successfully");
   const rad = 50 - 25*Math.random();
@@ -82,20 +56,41 @@ function generatePositionValues(pre_pos) {
   const vector_max = rad + pre_pos.rad;
   const vector_size = remapNumber(Math.random(), 0, 1, vector_min, vector_max);
   const vector_angle = remapNumber(Math.random(), 0, 1, 225, 315);
-  const xpos = Math.cos(vector_angle)*vector_size;
-  const ypos = Math.sin(vector_angle)*vector_size;
+  const xpos = 250+Math.sin(vector_angle)*vector_size;
+  const ypos = 250+Math.cos(vector_angle)*vector_size;
   console.log("Position values: ", rad, xpos, ypos);
   return {rad, xpos, ypos};
 }
 
+// Creates an svg containing n circles
+function cloudSVG(n, cloud_color) {
+
+  const canvas = document.getElementById('canvas');
+  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  let cloud_id = "Cloud ";
+  svg.setAttribute("viewBox", "0 0 500 500");
+  svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  svg.setAttribute("class", "cloud_svg");
+  cloud_id = cloud_id+cloud_count;
+  svg.setAttribute("id", cloud_id);
+  cloud_count = cloud_count++;
+ 
+  
+  canvas.appendChild(svg);
+
+  let position ={rad:50, xpos:500, ypos:500};
+
+  for (i = 0; i < n; i++){
+    position = generatePositionValues(position);
+    document.getElementById(cloud_id).innerHTML += createCircle(position);
+  }
+  return svg;
+}
+
+// Returns a circle with given position and radius data
 function createCircle({rad, xpos, ypos}) {
   console.log("createCircle() called successfully");
-  const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-  // Set circle attributes
-  circle.setAttribute("cx", xpos);
-  circle.setAttribute("cy", ypos);
-  circle.setAttribute("r", rad);
-  return circle;
+  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px"></circle>`;
 }
 
 // Remap a number within two given ranges

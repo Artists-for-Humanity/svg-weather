@@ -15,6 +15,7 @@
 } */
 
 circle {
+  position: absolute;
   /* animation: pingPong var(--circle-animation-speed) infinite; */
   fill: var(--circle-fill);
 }
