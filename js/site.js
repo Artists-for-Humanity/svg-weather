@@ -38,8 +38,9 @@ fetch(api)
     temp_color = remapNumber(temp, 9, 91, 180, 360);
     console.log("temp_color: ", temp_color);
 
-
-    cloudSVG(10, precip);
+    cloudSVG(10, cloudColor(precip+20));
+    cloudSVG(10, cloudColor(precip+10));
+    cloudSVG(10, cloudColor(precip));
   });
 
 // draw circle
@@ -67,7 +68,7 @@ function generatePositionValues(pre_pos) {
 }
 
 // Creates an svg containing n circles
-function cloudSVG(n, precip) {
+function cloudSVG(n, p) {
 
   const canvas = document.getElementById('canvas');
   const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -78,7 +79,7 @@ function cloudSVG(n, precip) {
   cloud_id = cloud_id+cloud_count;
   svg.setAttribute("id", cloud_id);
   cloud_count = cloud_count++;
- 
+  
   
   canvas.appendChild(svg);
 
@@ -86,23 +87,25 @@ function cloudSVG(n, precip) {
 
   for (i = 0; i < n; i++){
     position = generatePositionValues(position);
-    console.log("Cloud Color: ", cloudColor(precip));
-    document.getElementById(cloud_id).innerHTML += createCircle(position, cloudColor(precip));
+    console.log("Cloud Color: ", p);
+    document.getElementById(cloud_id).innerHTML += createCircle(position, p);
   }
-
   return svg;
 }
 
 // Returns a circle with given position and radius data
 function createCircle({rad, xpos, ypos}, p) {
   console.log("createCircle() called successfully");
+  console.log(`<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${p}"></circle>`);
   return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${p}"></circle>`;
 }
 
+// Sets hsl color for cloud
 function cloudColor(n) {
   let c = remapNumber(n, 0, 200, 25, 85);
   let col_val = 110 - c;
-  return `hsl(0%, 0%, ${col_val}%)`;
+  console.log(`hsl(0, 0%, ${col_val}%)`);
+  return `hsl(0, 0%, ${col_val}%)`;
 }
 
 // Remap a number within two given ranges
