@@ -44,23 +44,24 @@ fetch(api)
   });
 
 // draw circle
-function draw() {
-  console.log("draw() called successfully");
-  const color = `hsl(0%, 100%, 50%)`;
-  body.style.setProperty('--circle-fill', color);
+// function draw() {
+//   console.log("draw() called successfully");
+//   const color = `hsl(0%, 100%, 50%)`;
+//   body.style.setProperty('--circle-fill', color);
 
-  window.requestAnimationFrame(() => {
-    draw();
-  });
-}
+//   window.requestAnimationFrame(() => {
+//     draw();
+//   });
+// }
 
+// Generates position of new circle within bounds
 function generatePositionValues(pre_pos) {
   console.log("generatePositionValues() called successfully");
   const rad = 50 - 25*Math.random();
   const vector_min = Math.max(rad, pre_pos.rad);
   const vector_max = rad + pre_pos.rad;
   const vector_size = remapNumber(Math.random(), 0, 1, vector_min, vector_max);
-  const vector_angle = remapNumber(Math.random(), 0, 1, 225, 315);
+  const vector_angle = remapNumber(Math.random(), 0, 1, 0, 360);
   const xpos = 250+Math.sin(vector_angle)*vector_size;
   const ypos = 250+Math.cos(vector_angle)*vector_size;
   console.log("Position values: ", rad, xpos, ypos);
@@ -68,7 +69,7 @@ function generatePositionValues(pre_pos) {
 }
 
 // Creates an svg containing n circles
-function cloudSVG(n, p) {
+function cloudSVG(num_clouds, precipitation) {
 
   const canvas = document.getElementById('canvas');
   const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -85,26 +86,23 @@ function cloudSVG(n, p) {
 
   let position ={rad:50, xpos:500, ypos:500};
 
-  for (i = 0; i < n; i++){
+  for (i = 0; i < num_clouds; i++){
     position = generatePositionValues(position);
-    console.log("Cloud Color: ", p);
-    document.getElementById(cloud_id).innerHTML += createCircle(position, p);
+    document.getElementById(cloud_id).innerHTML += createCircle(position, precipitation);
   }
   return svg;
 }
 
 // Returns a circle with given position and radius data
-function createCircle({rad, xpos, ypos}, p) {
+function createCircle({rad, xpos, ypos}, precipitation) {
   console.log("createCircle() called successfully");
-  console.log(`<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${p}"></circle>`);
-  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${p}"></circle>`;
+  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${precipitation}"></circle>`;
 }
 
 // Sets hsl color for cloud
-function cloudColor(n) {
-  let c = remapNumber(n, 0, 200, 25, 85);
+function cloudColor(precipitation) {
+  let c = remapNumber(precipitation, 0, 200, 25, 85);
   let col_val = 110 - c;
-  console.log(`hsl(0, 0%, ${col_val}%)`);
   return `hsl(0, 0%, ${col_val}%)`;
 }
 
