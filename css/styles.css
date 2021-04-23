@@ -1,20 +1,18 @@
 :root {
-  --circle-fill: rgb(0, 0, 255);
-  --circle-animation-speed: 1s;
+  --circle-animation-speed: 3s;
 }
 
 @keyframes pingPong {
   0%,
   100% {
-    transform: translate3d(-5%, 0, 0);
+    transform: translate3d(0, -1%, 0);
   }
 
   50% {
-    transform: translate3d(5%, 0, 0);
+    transform: translate3d(0, 1%, 0);
   }
 }
 
 circle {
   animation: pingPong var(--circle-animation-speed) infinite;
-  fill: var(--circle-fill);
 }
