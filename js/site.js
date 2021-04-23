@@ -1,5 +1,4 @@
 // fetch weather data
-
 const body = document.body;
 const circle = document.querySelector('circle');
 
@@ -14,13 +13,16 @@ fetch(api)
     console.log(data);
     const {
       precip_mm: precip,
+      wind_mph: wind
     } = data.current;
 
+    const wind_speed = 10 - 5 * (wind / 12.3);
+    console.log("Wind Speed remap:", wind_speed);
     const num_clouds = 3;
     const svg = createSVG();
-
+    svg.style.setProperty('--circle-animation-speed', wind_speed + "s");
     for (let i = num_clouds - 1; i >= 0; i--) {
-      createCloud(svg, num_clouds, cloudColor(precip + (i * 10)));
+      createCloud(svg, 5, cloudColor(precip + (i * 10)));
     }
 
 
@@ -68,15 +70,16 @@ function createSVG() {
   return svg;
 }
 
-function createCloud(svg, num_clouds, color) {
+function createCloud(svg, num_circles, color) {
   let position = {
     rad: 50,
     xpos: 500,
     ypos: 500
   };
-  for (i = 0; i < num_clouds; i++) {
+  for (i = 0; i < num_circles; i++) {
+
     position = generatePositionValues(position);
-    svg.innerHTML += createCircle(position, color);
+    svg.innerHTML += createCircle(position, color, i);
   }
 }
 
@@ -85,9 +88,8 @@ function createCircle({
   rad,
   xpos,
   ypos
-}, color) {
-  console.log("createCircle() called successfully");
-  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${color}"></circle>`;
+}, color, delay) {
+  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${color}" style="--animation-delay: ${(delay/5)*-1}s"></circle>`;
 }
 
 // Sets hsl color for cloud
