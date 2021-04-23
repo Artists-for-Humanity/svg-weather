@@ -1,8 +1,5 @@
-:root {
-  --circle-animation-speed: 3s;
-}
-
 @keyframes pingPong {
+
   0%,
   100% {
     transform: translate3d(0, -1%, 0);
@@ -14,5 +11,5 @@
 }
 
 circle {
-  animation: pingPong var(--circle-animation-speed) infinite;
+  animation: pingPong var(--circle-animation-speed, 3s) var(--animation-delay, 0s) infinite cubic-bezier(.5, .01, .5, 1);
 }
