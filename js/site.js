@@ -5,12 +5,11 @@ const circle = document.querySelector('circle');
 
 let lat = 42.3429718;
 let long = -71.0557969;
-let temp = 65;
-let temp_color = 180;
-let precip = 100;
-let wind = 5;
-let wind_speed = 5;
-let cloud_count = 0;
+let temp;
+let temp_color;
+let precip;
+let wind;
+let wind_speed;
 
 const api = `http://api.weatherapi.com/v1/forecast.json?key=5863755acb594078956213139202910&q=${lat},${long}&days=1`;
 
@@ -19,28 +18,21 @@ fetch(api)
   .then((data) => {
     console.log(data);
     const {
-      precip_mm,
-      temp_f,
-      feelslike_f,
-      humidity,
-      vis_miles,
-      wind_mph,
-      temp_c,
+      precip_mm: precip,
+      temp_f: temp,
+      wind_mph: wind
     } = data.current;
-    precip = data.current.precip_mm;
-    console.log("Precip: ", precip);
-    temp = data.current.temp_f;
-    console.log("Temp: ", temp);
-    wind = data.current.wind_mph;
-    console.log("Wind: ", wind);
+    
     wind_speed = 10 - 5 * (wind / 12.3);
-    console.log("wind_speed: ", wind_speed);
     temp_color = remapNumber(temp, 9, 91, 180, 360);
-    console.log("temp_color: ", temp_color);
 
-    cloudSVG(10, cloudColor(precip+20));
-    cloudSVG(10, cloudColor(precip+10));
-    cloudSVG(10, cloudColor(precip));
+    let num_clouds = 3;
+
+    for (let i = num_clouds-1; i >= 0; i--){
+      cloudSVG(10, cloudColor(precip+(i*10)));
+    }
+    
+    
   });
 
 // draw circle
@@ -73,13 +65,9 @@ function cloudSVG(num_clouds, precipitation) {
 
   const canvas = document.getElementById('canvas');
   const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  let cloud_id = "Cloud ";
   svg.setAttribute("viewBox", "0 0 500 500");
   svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
   svg.setAttribute("class", "cloud_svg");
-  cloud_id = cloud_id+cloud_count;
-  svg.setAttribute("id", cloud_id);
-  cloud_count = cloud_count++;
   
   
   canvas.appendChild(svg);
@@ -88,7 +76,7 @@ function cloudSVG(num_clouds, precipitation) {
 
   for (i = 0; i < num_clouds; i++){
     position = generatePositionValues(position);
-    document.getElementById(cloud_id).innerHTML += createCircle(position, precipitation);
+    svg.innerHTML += createCircle(position, precipitation);
   }
   return svg;
 }
