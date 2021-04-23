@@ -26,10 +26,10 @@ fetch(api)
     wind_speed = 10 - 5 * (wind / 12.3);
     temp_color = remapNumber(temp, 9, 91, 180, 360);
 
-    let num_clouds = 3;
-
+    const num_clouds = 3;
+    const svg = createSVG();
     for (let i = num_clouds-1; i >= 0; i--){
-      cloudSVG(10, cloudColor(precip+(i*10)));
+      createCloud(svg, num_clouds, cloudColor(precip+(i*10)));
     }
     
     
@@ -61,30 +61,30 @@ function generatePositionValues(pre_pos) {
 }
 
 // Creates an svg containing n circles
-function cloudSVG(num_clouds, precipitation) {
+function createSVG() {
 
   const canvas = document.getElementById('canvas');
   const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
   svg.setAttribute("viewBox", "0 0 500 500");
   svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
   svg.setAttribute("class", "cloud_svg");
-  
-  
   canvas.appendChild(svg);
 
-  let position ={rad:50, xpos:500, ypos:500};
-
-  for (i = 0; i < num_clouds; i++){
-    position = generatePositionValues(position);
-    svg.innerHTML += createCircle(position, precipitation);
-  }
   return svg;
 }
 
+function createCloud(svg, num_clouds, color) {
+  let position ={rad:50, xpos:500, ypos:500};
+  for (i = 0; i < num_clouds; i++){
+    position = generatePositionValues(position);
+    svg.innerHTML += createCircle(position, color);
+  }
+}
+
 // Returns a circle with given position and radius data
-function createCircle({rad, xpos, ypos}, precipitation) {
+function createCircle({rad, xpos, ypos}, color) {
   console.log("createCircle() called successfully");
-  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${precipitation}"></circle>`;
+  return `<circle cx="${xpos}px" cy="${ypos}px" r="${rad}px" fill="${color}"></circle>`;
 }
 
 // Sets hsl color for cloud
